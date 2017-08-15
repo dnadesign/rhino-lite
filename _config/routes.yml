@@ -1,0 +1,9 @@
+---
+Name: rhino#routes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'docs//$Action/$ID/$OtherID': 'DocumentationViewer'
+    'RhinoAssessment_Controller//$Action/$ID' : 'RhinoAssessment_Controller'
+

@@ -1,0 +1,34 @@
+SiteTree:
+  create_default_pages: false
+
+Controller:
+  extensions:
+    - RhinoVersionExtension
+
+ReadonlyField:
+  extensions:
+    - ReadonlyFieldExtension
+
+SiteConfig:
+  extensions:
+    - RhinoSiteConfigExtension
+
+SubmittedForm:
+  extensions:
+    - SubmittedAssessmentFormExtension
+
+SubmittedFormField:
+  extensions:
+    - RhinoSubmittedFormField
+
+EditableOption:
+  extensions:
+    - BlockBetterButtonsExtension
+
+EditableFormField:
+  extensions:
+    - BlockBetterButtonsExtension
+
+Injector:
+  GridFieldBetterButtonsItemRequest:
+    class: GridFieldBetterButtonsItemRequest_SaveCallback

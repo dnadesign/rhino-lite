@@ -1,0 +1,13 @@
+{
+    "name": "dnadesign/rhino-base",
+    "license": "Copyright 2017 DNA Design",
+    "authors": [],
+    "type": "silverstripe-module",
+    "require": {
+    	"silverstripe/framework": ">=3.2",
+    	"silverstripe/cms": ">=3.2",
+    	"silverstripe/userforms": "dev-master",
+    	"webbuilders-group/silverstripe-frontendgridfield": "dev-master",
+        "undefinedoffset/sortablegridfield": "dev-master",
+    }
+}

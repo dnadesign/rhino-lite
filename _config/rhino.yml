@@ -1,0 +1,19 @@
+---
+Name: rhino
+---
+EditableCheckbox:
+  singular_name: Checkbox
+EditableTextField:
+  singular_name: Text
+EditableRadioField:
+  singular_name: Radio
+EditableCheckboxGroupField:
+  singular_name: Checkboxes
+EditableDateField:
+  singular_name: Date Selector
+EditableDropdown:
+  singular_name: Dropdown
+EditableFileField:
+  singular_name: Upload
+EditableFormHeading:
+  singular_name: Heading

@@ -1,0 +1,11 @@
+---
+name: docsviewer
+after: docsviewer#docsviewer
+---
+DocumentationManifest:
+  automatic_registration: false
+  register_entities:
+    - 
+      Path: "rhino-base/docs/"
+      Stable: true
+      Title: "Rhino Documentation"
