@@ -36,6 +36,7 @@ class SubmittedAssessmentFormExtension extends DataExtension {
 			$this->owner = $this->owner->newClassInstance('RhinoSubmittedAssessment');
 			$this->owner->write();
 
+			// Marking happens on RhinoSubmittedAssessment 
 			if ($this->owner->hasMethod('onAfterUpdateAfterProcess')) {
 				$this->owner->onAfterUpdateAfterProcess();
 			}

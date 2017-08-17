@@ -32,6 +32,28 @@ class RhinoAssessment extends UserDefinedForm {
 			}
 		}
 
+        // Submissions must be RhinoSubmittedAssessments
+        $gridField = $fields->fieldByName('Root.Submissions.Submissions');
+
+        $list = RhinoSubmittedAssessment::get()->filter('ID', $this->Submissions()->column('ID'));
+        $gridField->setList($list);
+
+        // Summary Fields are hijacked by UserDefinedForm
+        // So need to explicitely use the RhinoSubmittedAssessment ones
+        $config = $gridField->getConfig();
+        $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+
+        $columns = singleton('RhinoSubmittedAssessment')->summaryFields();
+
+        // Still add the EditableFormField if required
+        foreach(EditableFormField::get()->filter(array("ParentID" => $this->ID)) as $eff) {
+            if($eff->ShowInSummary) {
+                $columns[$eff->Name] = $eff->Title ?: $eff->Name;
+            }
+        }
+        
+        $dataColumns->setDisplayFields($columns);
+
 		$this->updateEditableFields();
 
 		return $fields;
@@ -66,6 +88,36 @@ class RhinoAssessment extends UserDefinedForm {
 		// return fields
 		return $fields;
 	}
+
+    public function getMarkableQuestions() {
+        $fields = $this->getQuestions()->filterByCallback(function($field) {
+            return $field->hasMethod('pass_or_fail');
+        });
+
+        return $fields;
+    }
+
+    /**
+    * Shortcode to display the feedback on the Submission screen
+    */
+    public static function assessment_feedback() {
+        $request = Controller::curr()->getRequest();
+
+        if($request->latestParam('Action') == 'finished' && $submissionID = $request->latestParam('ID')) {
+            
+            $submission = RhinoSubmittedAssessment::get()->filter('uid', $submissionID)->First();
+            if($submission) {
+                $assessment = $submission->Parent();
+                if($assessment) {
+                    $mark = $submission->getAssessmentMark();
+                    $feedback = $assessment->dbObject('FeedbackOn'.$mark);
+                    if ($feedback) {
+                        return $feedback;
+                    }
+                }
+            }
+        }
+    }
 }
 
 class RhinoAssessment_Controller extends UserDefinedForm_Controller {

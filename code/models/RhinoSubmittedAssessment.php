@@ -6,8 +6,10 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 		'ID' => 'ID',
 		'uid' => 'uid',
 		'Created.Nice' => 'Submitted on',
-		'getResult' =>'Result'
+		'getAssessmentMark' =>'Assessment Mark'
 	);
+
+	private static $default_sort = 'Created DESC';
 
 	/**
 	* Result is determine by whether or not all the submittedField have
@@ -15,54 +17,35 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	*
 	* @return String
 	*/
-	public function getResult() {
-		if ($this->hasUnmarkedAnswers() || !$this->Values()->exists()) return 'Unknown';
+	public function getAssessmentMark() {
+		$unmarked = $this->getUnmarkedAnswersCount();
+		if ($unmarked > 0) return sprintf('%s unmarked answers');
 
-		$result = 'Pass';
+		if ($this->getAnswers()->Count() == 0) return sprintf('Answers deleted!');
 
-		$wrongAnswers =  $this->getAnswers()->filter('Result', 'Fail');
+		$mark = 'Pass';
 
-		if ($wrongAnswers->Count() > 0) {
-			$result = 'Fail';
+		$wrong = $this->getWrongAnswers();
+		if ($wrong && $wrong->Count() > 0) {
+			$mark = 'Fail';
 		}
 
-		return $result;
+		return $mark;
 	}
 
 	/**
-	* Return the information required for the result tile
+	* Retrieves all of the questions that can be marked
 	*
-	* @return ArrayData | false
+	* @return DataList
 	*/
-	public function getScore() {
-		$result = $this->getResult();
-		$questions = $this->Parent()->getQuestions();
-		$correctAnswers = $this->getCorrectAnswers();
-		$time = $this->TimeToCompletion;
-		$isMe = (Member::currentUserID() && $this->SubmittedByID == Member::currentUserID());
+	public function getQuestionsToBeMarked() {
+		$parent = $this->Parent();
+		
+		if ($parent->hasMethod('getMarkableQuestions')) {
+			return $parent->getMarkableQuestions();
+		}
 
-		$data = array(
-			'Result' => $result,
-			'TotalQuestions' => $questions->Count(),
-			'CorrectAnswers' => $correctAnswers->Count(),
-			'Time' => $time,			
-			'SubmittedBy' => $this->SubmittedBy(),
-			'IsMe' => $isMe
-		);
-
-		return new ArrayData($data);
-	}
-
-	/**
-	* Checks if all SubmittedFields have been marked
-	*
-	* @return Boolean
-	*/
-	public function hasUnmarkedAnswers() {
-		if (!$this->Values()->exists()) return true;
-
-		$unmarkedAnswers = $this->getAnswers()->filter('Result' , array('null', 'Unknown'))->Count();
-		return ($unmarkedAnswers > 0);
+		return null;
 	}
 
 	/**
@@ -75,13 +58,59 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	}
 
 	/**
+	* Fetch all of the answers that have been marked
+	*
+	* @return DataList
+	*/
+	public function getMarkedAnswers() {
+		// If there are no questions to be marked
+		// there are no unmarked answers
+		$questions = $this->getQuestionsToBeMarked();
+		if (!$questions || $questions->Count() == 0) return null;
+
+		// If there are no answers, they must have been deleted
+		if (!$this->Values()->exists()) return null;
+
+		// Get all the answers from markable questions
+		$markedAnswers = $this->getAnswers()->filter(array('Name' => $questions->column('Name')))->exclude('Mark', 'none');
+
+		return $markedAnswers;
+	}
+
+	/**
+	* Checks if all SubmittedFields have been marked
+	*
+	* @return Int | Boolean
+	*/
+	public function getUnmarkedAnswersCount() {
+		// If there are no questions to be marked
+		// there are no unmarked answers
+		$questions = $this->getQuestionsToBeMarked();
+		if (!$questions || $questions->count() == 0) return false;
+
+		// If there are no answers, they must have been deleted
+		if (!$this->Values()->exists()) return false;
+
+		// Get all the answers from markable questions
+		$unmarkedAnswers = $this->getAnswers()->filter(array('Name' => $questions->column('Name'), 'Mark' => 'none'));
+
+		return $unmarkedAnswers->Count();
+	}
+
+	public function hasUnmarkedAnswers() {
+		$count = $this->getUnmarkedAnswersCount();
+		return ($count !== false) ? ($count > 0) : false;
+	}
+
+	/**
 	* Return the RhinoSubmittedFormField asssociated with this SubmittedForm
 	* which have been correctly answered
 	*
 	* @return DataList (RhinoSubmittedFormField)
 	*/
 	public function getCorrectAnswers() {
- 		return $this->getAnswers()->filter('Result', 'Pass');
+		$marked = $this->getMarkedAnswers();
+ 		return ($marked) ? $marked->filter('Mark', 'pass') : null;
 	}
 
 	/**
@@ -91,7 +120,8 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	* @return DataList (RhinoSubmittedFormField)
 	*/
 	public function getWrongAnswers() {
- 		return $this->getAnswers()->filter('Result', 'Fail');
+		$marked = $this->getMarkedAnswers();
+ 		return ($marked) ? $marked->filter('Mark', 'fail') : null;
 	}
 
 }
