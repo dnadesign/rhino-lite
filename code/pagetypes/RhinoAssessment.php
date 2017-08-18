@@ -18,6 +18,8 @@ class RhinoAssessment extends UserDefinedForm {
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
+        $fields->removeByName('DisableSaveSubmissions');
+
 		// Feedback
 		$pass = HTMLEditorField::create('FeedbackOnPass');
 		$fail = HTMLEditorField::create('FeedbackOnFail');
