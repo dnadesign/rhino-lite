@@ -1,4 +1,4 @@
-# Rhino Fields
+# Rhino Lite
 
 ## Introduction
 
