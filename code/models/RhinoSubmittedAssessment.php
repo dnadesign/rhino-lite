@@ -1,6 +1,12 @@
 <?php
 
+namespace DNADesign\rhinolite;
+
+use SubmittedForm;
+
 class RhinoSubmittedAssessment extends SubmittedForm {
+	
+	private static $table_name = 'RhinoSubmittedAssessment';
 
 	private static $summary_fields = array(
 		'ID' => 'ID',

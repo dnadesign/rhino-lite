@@ -8,7 +8,7 @@
     	"silverstripe/cms": ">=3.2",
     	"silverstripe/userforms": "dev-master",
     	"webbuilders-group/silverstripe-frontendgridfield": "dev-master",
-        "undefinedoffset/sortablegridfield": "dev-master",
+        "undefinedoffset/sortablegridfield": "dev-master"
     },
     "suggest": {
         "dnadesign/rhino-fields": "Collection of markable fields for RhinoAssessment"

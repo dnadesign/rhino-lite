@@ -1,6 +1,25 @@
 <?php
 
+namespace DNADesign\rhinolite;
+
+use DNADesign\rhinolite\RhinoSubmittedAssessment;
+use UserDefinedForm;
+use UserDefinedForm_Controller;
+use HTMLEditorField;
+use EditableFormField;
+use Controller;
+use SubmittedForm;
+use Session;
+use Object;
+use Member;
+use ValidationException;
+use UserFormRecipientEmail;
+use HTTP;
+use SSViewer;
+
 class RhinoAssessment extends UserDefinedForm {
+
+    private static $table_name = 'RhinoAssessment';
 
 	private static $db = array(
 		'FeedbackOnPass' => 'HTMLText',
