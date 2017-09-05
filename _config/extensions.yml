@@ -1,3 +1,7 @@
+---
+Name: rhino#extensions
+---
+
 SiteTree:
   create_default_pages: false
 
