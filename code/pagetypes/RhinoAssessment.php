@@ -18,43 +18,47 @@ class RhinoAssessment extends UserDefinedForm {
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-        $fields->removeByName('DisableSaveSubmissions');
+       $this->beforeUpdateCMSFields(function ($fields) {     
+           
+            $fields->removeByName('DisableSaveSubmissions');
 
-		// Feedback
-		$pass = HTMLEditorField::create('FeedbackOnPass');
-		$fail = HTMLEditorField::create('FeedbackOnFail');
+    		// Feedback
+    		$pass = HTMLEditorField::create('FeedbackOnPass');
+    		$fail = HTMLEditorField::create('FeedbackOnFail');
 
-		$fields->addFieldsToTab('Root.Feeedback', array($pass, $fail));
+    		$fields->addFieldsToTab('Root.FeedbackOnSubmission', array($pass, $fail));
 
-		// Allow subclass to create defaults fields
-		if (method_exists(get_class($this), 'createDefaultFields')) {
-			// Do nothing if the form already has fields set up
-			if ($this->getQuestions()->Count() == 0) {
-				$this->createDefaultFields($this->Fields());
-			}
-		}
+    		// Allow subclass to create defaults fields
+    		if (method_exists(get_class($this), 'createDefaultFields')) {
+    			// Do nothing if the form already has fields set up
+    			if ($this->getQuestions()->Count() == 0) {
+    				$this->createDefaultFields($this->Fields());
+    			}
+    		}
 
-        // Submissions must be RhinoSubmittedAssessments
-        $gridField = $fields->fieldByName('Root.Submissions.Submissions');
+            // Submissions must be RhinoSubmittedAssessments
+            $gridField = $fields->fieldByName('Root.Submissions.Submissions');
 
-        $list = RhinoSubmittedAssessment::get()->filter('ID', $this->Submissions()->column('ID'));
-        $gridField->setList($list);
+            $list = RhinoSubmittedAssessment::get()->filter('ID', $this->Submissions()->column('ID'));
+            $gridField->setList($list);
 
-        // Summary Fields are hijacked by UserDefinedForm
-        // So need to explicitely use the RhinoSubmittedAssessment ones
-        $config = $gridField->getConfig();
-        $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+            // Summary Fields are hijacked by UserDefinedForm
+            // So need to explicitely use the RhinoSubmittedAssessment ones
+            $config = $gridField->getConfig();
+            $dataColumns = $config->getComponentByType('GridFieldDataColumns');
 
-        $columns = singleton('RhinoSubmittedAssessment')->summaryFields();
+            $columns = singleton('RhinoSubmittedAssessment')->summaryFields();
 
-        // Still add the EditableFormField if required
-        foreach(EditableFormField::get()->filter(array("ParentID" => $this->ID)) as $eff) {
-            if($eff->ShowInSummary) {
-                $columns[$eff->Name] = $eff->Title ?: $eff->Name;
+            // Still add the EditableFormField if required
+            foreach(EditableFormField::get()->filter(array("ParentID" => $this->ID)) as $eff) {
+                if($eff->ShowInSummary) {
+                    $columns[$eff->Name] = $eff->Title ?: $eff->Name;
+                }
             }
-        }
-        
-        $dataColumns->setDisplayFields($columns);
+            
+            $dataColumns->setDisplayFields($columns);
+
+         });
 
 		$this->updateEditableFields();
 
