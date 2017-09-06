@@ -33,7 +33,7 @@ class SubmittedAssessmentFormExtension extends DataExtension {
 			(!is_a($parent, 'RhinoAssignment') && !is_subclass_of($parent, 'RhinoAssignment'))
 		) {
 			// Make SubmittedForm actual RhinoSubmittedAssessment
-			$this->owner = $this->owner->newClassInstance('RhinoSubmittedAssessment');
+			$this->owner = $this->owner->newClassInstance($parent->stat('submission_class'));
 			$this->owner->write();
 
 			// Marking happens on RhinoSubmittedAssessment 

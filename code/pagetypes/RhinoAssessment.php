@@ -15,6 +15,8 @@ class RhinoAssessment extends UserDefinedForm {
 
 	private static $plural_name = 'Assessments';
 
+    private static $submission_class = 'RhinoSubmittedAssessment';
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
@@ -224,8 +226,6 @@ class RhinoAssessment_Controller extends UserDefinedForm_Controller {
         $submittedFields = new ArrayList();
 
         foreach ($this->Fields() as $field) {
-            // var_dump($field->Title, $field->->showInReports());
-
 
             if (!$field->showInReports()) {
                 continue;
