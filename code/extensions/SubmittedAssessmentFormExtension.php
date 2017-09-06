@@ -15,7 +15,7 @@ class SubmittedAssessmentFormExtension extends DataExtension {
 	* Change class of SubmittedForm to be RhinoSubmittedAssessment if 
 	* Parent is a RhinoAssessment and not RhinoAssignment
 	*/
-	public function updateAfterProcess() {
+	public function updateAfterProcess($data = null, $form = null) {
 		$parent = $this->owner->Parent();	
 
 		// Set a unique id if possible
@@ -38,7 +38,7 @@ class SubmittedAssessmentFormExtension extends DataExtension {
 
 			// Marking happens on RhinoSubmittedAssessment 
 			if ($this->owner->hasMethod('onAfterUpdateAfterProcess')) {
-				$this->owner->onAfterUpdateAfterProcess();
+				$this->owner->onAfterUpdateAfterProcess($data, $form);
 			}
 		}		
 	}

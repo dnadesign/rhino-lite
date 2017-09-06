@@ -370,7 +370,7 @@ class RhinoAssessment_Controller extends UserDefinedForm_Controller {
             }
         }
 
-        $submittedForm->extend('updateAfterProcess');
+        $submittedForm->extend('updateAfterProcess', $data, $form);
 
         Session::clear("FormInfo.{$form->FormName()}.errors");
         Session::clear("FormInfo.{$form->FormName()}.data");

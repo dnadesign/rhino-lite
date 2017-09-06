@@ -20,4 +20,15 @@ class RhinoSubmittedFormField extends DataExtension {
 		}
 	}
 
+	/**
+	* Return the actual form field that generated this answer
+	*/
+	public function getParentEditableFormField() {
+		$submission = $this->owner->Parent();
+		$form = $submission->Parent();
+		$field = $form->Fields()->filter('Name', $this->owner->Name)->First();	
+
+		return $field;
+	}
+
 }
