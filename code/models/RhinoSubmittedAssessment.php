@@ -12,6 +12,14 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	private static $default_sort = 'Created DESC';
 
 	/**
+	* Helper method to find a submission by UID
+	*/
+	public static function get_by_uid($uid) {
+		$type = get_called_class();
+		return $type::get()->filter('uid', $uid)->First();
+	}
+
+	/**
 	* Result is determine by whether or not all the submittedField have
 	* a result set to pass or not
 	*
@@ -122,6 +130,26 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	public function getWrongAnswers() {
 		$marked = $this->getMarkedAnswers();
  		return ($marked) ? $marked->filter('Mark', 'fail') : null;
+	}
+
+	/**
+	* Return the link where this submission can be seen
+	* ie the finished action on the parent controller
+	*
+	* @return String
+	*/
+	public function getLink() {
+		$page = $this->Parent();
+		if ($page && $page->exists()) {
+			$controller = singleton($page->ClassName.'_Controller');
+			if ($controller && $controller instanceof UserDefinedForm_Controller) {
+				// TODO: Make sure the action is actually 'finished'
+				$link = Controller::join_links($page->AbsoluteLink(), 'finished', $this->uid);
+				return $link;
+			}
+		}
+
+		return  null;
 	}
 
 }
