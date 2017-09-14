@@ -164,6 +164,8 @@ class RhinoAssessment_Controller extends UserDefinedForm_Controller {
 	{
 		$submission = $this->getSubmission();
 
+		if (!$submission) return $this->httpError(404);
+
 		$referrer = isset($_GET['referrer']) ? urldecode($_GET['referrer']) : null;
 
 		if (!$this->DisableAuthenicatedFinishAction && !$submission) {
