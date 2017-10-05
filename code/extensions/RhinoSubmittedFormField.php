@@ -6,17 +6,34 @@ class RhinoSubmittedFormField extends DataExtension {
 		'Mark' => "Enum('none, pass, fail')"
 	);
 
+	private static $has_one = array(
+		'ParentField' => 'EditableFormField',
+		'ParentOption' => 'EditableOption'
+	);
+
 	public function updateSummaryFields(&$fields) {
 		$fields['Mark'] = 'Mark';
 	}
 
 	/**
-	* Perform marking on each field
+	* Record Additional Information
 	*/
 	public function onPopulationFromField($field) {
 
+		// Perform Marking
 		if ($field->hasMethod('pass_or_fail')) {
 			$this->owner->Mark = $field->pass_or_fail($this->owner->Value);
+		}
+
+		// Record Parent Field
+		$this->owner->ParentFieldID = $field->ID;
+
+		// Record PArent Option if applicable
+		if ($field && $field instanceof EditableRadioField ) {
+			$option = $field->Options()->filter('Value', $this->owner->Value)->First();
+			if ($option && $option->exists()) {
+				$this->owner->ParentOptionID = $option->ID;
+			}
 		}
 	}
 
