@@ -27,7 +27,7 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	*/
 	public function getAssessmentMark() {
 		$unmarked = $this->getUnmarkedAnswersCount();
-		if ($unmarked > 0) return sprintf('%s unmarked answers');
+		if ($unmarked > 0) return sprintf('%s unmarked answers', $unmarked);
 
 		if ($this->getAnswers()->Count() == 0) return sprintf('Answers deleted!');
 
