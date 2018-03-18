@@ -48,7 +48,7 @@ class RhinoSubmittedAssessment extends SubmittedForm {
 	*/
 	public function getQuestionsToBeMarked() {
 		$parent = $this->Parent();
-		
+
 		if ($parent->hasMethod('getMarkableQuestions')) {
 			return $parent->getMarkableQuestions();
 		}

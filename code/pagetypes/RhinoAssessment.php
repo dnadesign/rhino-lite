@@ -135,12 +135,26 @@ class RhinoAssessment_Controller extends UserDefinedForm_Controller {
 	private static $finished_anchor = '';
 
 	private static $allowed_actions = array(
-		'finished'
+		'finished',
+		'Form'
 	);
 
 	public function init() {
 		parent::init();
 	}
+
+	/**
+     * Get the form for the page. Form can be modified by calling {@link updateForm()}
+     * on a UserDefinedForm extension.
+     *
+     * @return Forms
+     */
+    public function Form()
+    {
+        $form = UserForm::create($this);
+        $this->generateConditionalJavascript();
+        return $form;
+    }
 
 	/**
 	* Retrieve the latest submission from its uid
@@ -398,10 +412,15 @@ class RhinoAssessment_Controller extends UserDefinedForm_Controller {
 			Session::set('userformssubmission'. $this->ID, $submittedForm->ID);
 		}
 
-		$link = $this->Link('finished') . $referrer . $this->config()->finished_anchor;
+		$action = 'finished';
+
+		$this->extend('updateAction', $action);
+
+		$link = $this->Link($action) . $referrer . $this->config()->finished_anchor;
+
 		if($this->config()->allow_multiple_reviews == true) {
 			$link = Controller::join_links($link, '/'.$submittedForm->uid);
-		}
+		}		
 
 		return $this->redirect($link);
 	}

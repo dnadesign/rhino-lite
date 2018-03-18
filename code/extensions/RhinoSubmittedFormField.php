@@ -28,9 +28,10 @@ class RhinoSubmittedFormField extends DataExtension {
 		// Record Parent Field
 		$this->owner->ParentFieldID = $field->ID;
 
-		// Record PArent Option if applicable
+		// Record Parent Option if applicable
 		if ($field && $field instanceof EditableRadioField ) {
 			$option = $field->Options()->filter('Value', $this->owner->Value)->First();
+
 			if ($option && $option->exists()) {
 				$this->owner->ParentOptionID = $option->ID;
 			}
