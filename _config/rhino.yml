@@ -17,3 +17,6 @@ EditableFileField:
   singular_name: Upload
 EditableFormHeading:
   singular_name: Heading
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\ORM\ManyManyList: RhinoManyManyList

@@ -1,12 +1,18 @@
 <?php
 
-class BlockBetterButtonsExtension extends DataExtension {
+namespace DNADesign\Rhino\Extensions;
 
-	private static $better_buttons_enabled = false;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Versioned\Versioned;
 
-	public function onAfterWrite() {
-		if (Versioned::current_stage() == 'Stage') {
-			$this->owner->publish('Stage', 'Live');
-		}
-	}
+class BlockBetterButtonsExtension extends DataExtension
+{
+    private static $better_buttons_enabled = false;
+
+    public function onAfterWrite()
+    {
+        if (Versioned::get_stage() == 'Stage') {
+            $this->owner->publish('Stage', 'Live');
+        }
+    }
 }

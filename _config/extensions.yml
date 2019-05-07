@@ -1,38 +1,38 @@
 ---
-Name: rhino#extensions
+Name: rhino-extensions
 ---
 
-SiteTree:
+SilverStripe\CMS\Model\SiteTree:
   create_default_pages: false
 
-Controller:
+SilverStripe\Control\Controller:
   extensions:
-    - RhinoVersionExtension
+    - DNADesign\Rhino\Extensions\RhinoVersionExtension
 
-ReadonlyField:
+SilverStripe\Forms\ReadonlyField:
   extensions:
-    - ReadonlyFieldExtension
+    - DNADesign\Rhino\Extensions\ReadonlyFieldExtension
 
-SiteConfig:
+SilverStripe\SiteConfig\SiteConfig:
   extensions:
-    - RhinoSiteConfigExtension
+    - DNADesign\Rhino\Extensions\RhinoSiteConfigExtension
 
-SubmittedForm:
+SilverStripe\UserForms\Model\Submission\SubmittedForm:
   extensions:
-    - SubmittedAssessmentFormExtension
+    - DNADesign\Rhino\Extensions\SubmittedAssessmentFormExtension
 
-SubmittedFormField:
+SilverStripe\UserForms\Model\Submission\SubmittedFormField:
   extensions:
-    - RhinoSubmittedFormField
+    - DNADesign\Rhino\Extensions\RhinoSubmittedFormField
 
-EditableOption:
+SilverStripe\UserForms\Model\EditableFormField\EditableOption:
   extensions:
-    - BlockBetterButtonsExtension
+    - DNADesign\Rhino\Extensions\BlockBetterButtonsExtension
 
-EditableFormField:
+SilverStripe\UserForms\Model\EditableFormField:
   extensions:
-    - BlockBetterButtonsExtension
+    - DNADesign\Rhino\Extensions\BlockBetterButtonsExtension
 
-Injector:
-  GridFieldBetterButtonsItemRequest:
-    class: GridFieldBetterButtonsItemRequest_SaveCallback
+#SilverStripe\Core\Injector\Injector:
+#  GridFieldBetterButtonsItemRequest:
+#    class: GridFieldBetterButtonsItemRequest_SaveCallback

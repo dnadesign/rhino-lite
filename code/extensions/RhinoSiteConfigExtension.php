@@ -1,16 +1,22 @@
 <?php
 
-class RhinoSiteConfigExtension extends DataExtension {
+namespace DNADesign\Rhino\Extensions;
 
-	private static $db = array(
-		'InstanceName' => 'Varchar(255)'
-	);
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataExtension;
 
-	public function updateCMSFields(FieldList $fields) {
+class RhinoSiteConfigExtension extends DataExtension
+{
+    private static $db = [
+        'InstanceName' => 'Varchar(255)'
+    ];
 
-		// Instance Name
-		$instanceName = TextField::create('InstanceName', 'Instance Name')->setRightTitle('The way we refer to this instance of Rhino. Appears in email subjects.');
-		$fields->addFieldToTab('Root.Rhino', $instanceName);
-	}
-
+    public function updateCMSFields(FieldList $fields)
+    {
+        // Instance Name
+        $instanceName = TextField::create('InstanceName',
+            'Instance Name')->setRightTitle('The way we refer to this instance of Rhino. Appears in email subjects.');
+        $fields->addFieldToTab('Root.Rhino', $instanceName);
+    }
 }

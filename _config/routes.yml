@@ -1,9 +1,9 @@
 ---
-Name: rhino#routes
-After: framework/routes#coreroutes
+Name: rhinoroutes
+After: 'coreroutes'
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    'docs//$Action/$ID/$OtherID': 'DocumentationViewer'
-    'RhinoAssessment_Controller//$Action/$ID' : 'RhinoAssessment_Controller'
+#    'docs//$Action/$ID/$OtherID': 'DocumentationViewer'
+    'RhinoAssessment_Controller//$Action/$ID' : DNADesign\Rhino\Control\RhinoAssessment_Controller
 

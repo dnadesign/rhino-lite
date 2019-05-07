@@ -1,52 +1,58 @@
 <?php
 
-class RhinoSubmittedFormField extends DataExtension {
+namespace DNADesign\Rhino\Extensions;
 
-	private static $db = array(
-		'Mark' => "Enum('none, pass, fail')"
-	);
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\UserForms\Model\EditableFormField\EditableRadioField;
 
-	private static $has_one = array(
-		'ParentField' => 'EditableFormField',
-		'ParentOption' => 'EditableOption'
-	);
+class RhinoSubmittedFormField extends DataExtension
+{
+    private static $db = [
+        'Mark' => "Enum('none, pass, fail')"
+    ];
 
-	public function updateSummaryFields(&$fields) {
-		$fields['Mark'] = 'Mark';
-	}
+    private static $has_one = [
+        'ParentField' => 'EditableFormField',
+        'ParentOption' => 'EditableOption'
+    ];
 
-	/**
-	* Record Additional Information
-	*/
-	public function onPopulationFromField($field) {
+    public function updateSummaryFields(&$fields)
+    {
+        $fields['Mark'] = 'Mark';
+    }
 
-		// Perform Marking
-		if ($field->hasMethod('pass_or_fail')) {
-			$this->owner->Mark = $field->pass_or_fail($this->owner->Value);
-		}
+    /**
+     * Record Additional Information
+     */
+    public function onPopulationFromField($field)
+    {
+        // Perform Marking
+        if ($field->hasMethod('pass_or_fail')) {
+            $this->owner->Mark = $field->pass_or_fail($this->owner->Value);
+        }
 
-		// Record Parent Field
-		$this->owner->ParentFieldID = $field->ID;
+        // Record Parent Field
+        $this->owner->ParentFieldID = $field->ID;
 
-		// Record Parent Option if applicable
-		if ($field && $field instanceof EditableRadioField ) {
-			$option = $field->Options()->filter('Value', $this->owner->Value)->First();
+        // Record Parent Option if applicable
+        if ($field && $field instanceof EditableRadioField) {
+            $option = $field->Options()->filter('Value', $this->owner->Value)->First();
 
-			if ($option && $option->exists()) {
-				$this->owner->ParentOptionID = $option->ID;
-			}
-		}
-	}
+            if ($option && $option->exists()) {
+                $this->owner->ParentOptionID = $option->ID;
+            }
+        }
+    }
 
-	/**
-	* Return the actual form field that generated this answer
-	*/
-	public function getParentEditableFormField() {
-		$submission = $this->owner->Parent();
-		$form = $submission->Parent();
-		$field = $form->Fields()->filter('Name', $this->owner->Name)->First();	
+    /**
+     * Return the actual form field that generated this answer
+     */
+    public function getParentEditableFormField()
+    {
+        $submission = $this->owner->Parent();
+        $form = $submission->Parent();
+        $field = $form->Fields()->filter('Name', $this->owner->Name)->First();
 
-		return $field;
-	}
-
+        return $field;
+    }
 }

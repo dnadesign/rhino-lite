@@ -1,45 +1,53 @@
 <?php
 
-class SubmittedAssessmentFormExtension extends DataExtension {
+namespace DNADesign\Rhino\Extensions;
 
-	private static $db = array(
-		'uid' => 'Varchar(255)'
-	);
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\DataExtension;
 
-	public function updateCMSFields(FieldList $fields) {
-		$uid = ReadOnlyField::create('uid', 'uid');
-		$fields->insertAfter($uid, 'ParentID');
-	}
+class SubmittedAssessmentFormExtension extends DataExtension
+{
+    private static $db = [
+        'uid' => 'Varchar(255)'
+    ];
 
-	/**
-	* Change class of SubmittedForm to be RhinoSubmittedAssessment if 
-	* Parent is a RhinoAssessment and not RhinoAssignment
-	*/
-	public function updateAfterProcess($data = null, $form = null) {
-		$parent = $this->owner->Parent();	
+    public function updateCMSFields(FieldList $fields)
+    {
+        $uid = ReadOnlyField::create('uid', 'uid');
+        $fields->insertAfter($uid, 'ParentID');
+    }
 
-		// Set a unique id if possible
-		if ($this->owner->hasField('uid') && !$this->owner->uid) {
-			$uid = sprintf('%s%s', $this->owner->ID, uniqid());
-			$this->owner->uid = $uid;
-			$this->owner->write();
-		}	
+    /**
+     * Change class of SubmittedForm to be RhinoSubmittedAssessment if
+     * Parent is a RhinoAssessment and not RhinoAssignment
+     */
+    public function updateAfterProcess($data = null, $form = null)
+    {
+        $parent = $this->owner->Parent();
 
-		// Transform SubmittedForm into RhinoSubmittedAssessment
-		// for extra functionality
-		if ( 
-			(is_a($parent, 'RhinoAssessment') || is_subclass_of($parent, 'RhinoAssessment'))
-			&& 
-			(!is_a($parent, 'RhinoAssignment') && !is_subclass_of($parent, 'RhinoAssignment'))
-		) {
-			// Make SubmittedForm actual RhinoSubmittedAssessment
-			$this->owner = $this->owner->newClassInstance($parent->stat('submission_class'));
-			$this->owner->write();
+        // Set a unique id if possible
+        if ($this->owner->hasField('uid') && !$this->owner->uid) {
+            $uid = sprintf('%s%s', $this->owner->ID, uniqid());
+            $this->owner->uid = $uid;
+            $this->owner->write();
+        }
 
-			// Marking happens on RhinoSubmittedAssessment 
-			if ($this->owner->hasMethod('onAfterUpdateAfterProcess')) {
-				$this->owner->onAfterUpdateAfterProcess($data, $form);
-			}
-		}		
-	}
+        // Transform SubmittedForm into RhinoSubmittedAssessment
+        // for extra functionality
+        if (
+            (is_a($parent, 'RhinoAssessment') || is_subclass_of($parent, 'RhinoAssessment'))
+            &&
+            (!is_a($parent, 'RhinoAssignment') && !is_subclass_of($parent, 'RhinoAssignment'))
+        ) {
+            // Make SubmittedForm actual RhinoSubmittedAssessment
+            $this->owner = $this->owner->newClassInstance($parent->stat('submission_class'));
+            $this->owner->write();
+
+            // Marking happens on RhinoSubmittedAssessment
+            if ($this->owner->hasMethod('onAfterUpdateAfterProcess')) {
+                $this->owner->onAfterUpdateAfterProcess($data, $form);
+            }
+        }
+    }
 }
