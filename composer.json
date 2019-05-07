@@ -7,7 +7,6 @@
     	"silverstripe/framework": "^4",
     	"silverstripe/cms": "^4",
     	"silverstripe/userforms": "^5",
-    	"webbuilders-group/silverstripe-frontendgridfield": "dev-master",
         "undefinedoffset/sortablegridfield": "*"
     },
     "require-dev": {
