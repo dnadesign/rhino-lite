@@ -1,7 +1,7 @@
 {
     "name": "dnadesign/rhino-lite",
     "license": "Copyright 2017 DNA Design",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "require": {
     	"silverstripe/framework": "^4",
     	"silverstripe/cms": "^4",
@@ -14,5 +14,10 @@
 	},
     "suggest": {
         "dnadesign/rhino-fields": "Collection of markable fields for RhinoAssessment"
+    },
+    "autoload": {
+        "psr-4": {
+            "DNADesign\\Rhino-lite\\": "src/"
+        }
     }
 }
