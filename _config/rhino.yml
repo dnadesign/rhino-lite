@@ -1,21 +1,21 @@
 ---
 Name: rhino
 ---
-EditableCheckbox:
+SilverStripe\UserForms\Model\EditableFormField\EditableCheckbox:
   singular_name: Checkbox
-EditableTextField:
+SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
   singular_name: Text
-EditableRadioField:
+SilverStripe\UserForms\Model\EditableFormField\EditableRadioField:
   singular_name: Radio
-EditableCheckboxGroupField:
+SilverStripe\UserForms\Model\EditableFormField\EditableCheckboxGroupField:
   singular_name: Checkboxes
-EditableDateField:
+SilverStripe\UserForms\Model\EditableFormField\EditableDateField:
   singular_name: Date Selector
-EditableDropdown:
+SilverStripe\UserForms\Model\EditableFormField\EditableDropdown:
   singular_name: Dropdown
-EditableFileField:
+SilverStripe\UserForms\Model\EditableFormField\EditableFileField:
   singular_name: Upload
-EditableFormHeading:
+SilverStripe\UserForms\Model\EditableFormField\EditableFormHeading:
   singular_name: Heading
 
 SilverStripe\Core\Injector\Injector:

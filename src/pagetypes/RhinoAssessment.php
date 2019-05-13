@@ -9,6 +9,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\UserForms\Model\EditableFormField;
 use SilverStripe\UserForms\Model\UserDefinedForm;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 class RhinoAssessment extends UserDefinedForm
 {
@@ -25,7 +26,9 @@ class RhinoAssessment extends UserDefinedForm
 
     private static $plural_name = 'Assessments';
 
-    private static $submission_class = 'RhinoSubmittedAssessment';
+    private static $submission_class = RhinoSubmittedAssessment::class;
+
+    private static $table_name = 'RhinoAssessment';
 
     public function getCMSFields()
     {
@@ -50,13 +53,17 @@ class RhinoAssessment extends UserDefinedForm
             // Submissions must be RhinoSubmittedAssessments
             $gridField = $fields->fieldByName('Root.Submissions.Submissions');
 
-            $list = RhinoSubmittedAssessment::get()->filter('ID', $this->Submissions()->column('ID'));
-            $gridField->setList($list);
+            $assessments = RhinoSubmittedAssessment::get();
+
+            if ($assessments->count() > 0) {
+                $list = $assessments->filter('ID', $this->Submissions()->column('ID'));
+                $gridField->setList($list);
+            }
 
             // Summary Fields are hijacked by UserDefinedForm
             // So need to explicitely use the RhinoSubmittedAssessment ones
             $config = $gridField->getConfig();
-            $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+            $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
 
             $columns = singleton($this->stat('submission_class'))->summaryFields();
 
@@ -81,7 +88,7 @@ class RhinoAssessment extends UserDefinedForm
         // Allow only certain fields to be created
         $allowedFields = $this->config()->allowed_field_types;
         if ($allowedFields) {
-            $fieldClasses = singleton('EditableFormField')->getEditableFieldClasses();
+            $fieldClasses = singleton(EditableFormField::class)->getEditableFieldClasses();
             foreach ($fieldClasses as $fieldClass => $fieldTitle) {
                 if (!in_array($fieldClass, $allowedFields)) {
                     Config::inst()->update($fieldClass, 'hidden', true);
