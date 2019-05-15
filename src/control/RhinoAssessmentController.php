@@ -7,6 +7,7 @@ use SilverStripe\Assets\Upload;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\Session;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
@@ -25,13 +26,14 @@ class RhinoAssessmentController extends UserDefinedFormController
 
     private static $finished_anchor = '';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'finished',
         'Form'
-    );
+    ];
 
     public function init()
     {
+        Debug::show('bqbwbbbwbw');die;
         parent::init();
     }
 
@@ -43,6 +45,7 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function Form()
     {
+        Debug::show('jqjqjqj');die;
         $form = UserForm::create($this);
         $this->generateConditionalJavascript();
 
@@ -55,6 +58,7 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function getSubmission()
     {
+        Debug::show('jhgfds');die;
         $submission = $this->getRequest()->param('ID');
 
         if ($submission) {
@@ -70,6 +74,7 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function finished()
     {
+        Debug::show('4h5eb');die;
         $submission = $this->getSubmission();
 
         if (!$submission) {
@@ -123,6 +128,7 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function process($data, $form)
     {
+        Debug::show('jhgfds');die;
         $submittedForm = SubmittedForm::create();
 
         $submittedForm->SubmittedByID = ($member = Security::getCurrentUser()) ? $member->ID : 0;
@@ -196,10 +202,10 @@ class RhinoAssessmentController extends UserDefinedFormController
             $submittedFields->push($submittedField);
         }
 
-        $emailData = array(
+        $emailData = [
             "Sender" => Member::currentUser(),
             "Fields" => $submittedFields
-        );
+        ];
 
         $this->extend('updateEmailData', $emailData, $attachments);
 

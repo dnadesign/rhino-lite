@@ -6,29 +6,30 @@ use DNADesign\Rhino\Model\RhinoSubmittedAssessment;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\UserForms\Model\EditableFormField;
+use SilverStripe\UserForms\Model\EditableFormField\EditableFormStep;
 use SilverStripe\UserForms\Model\UserDefinedForm;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 class RhinoAssessment extends UserDefinedForm
 {
-    private static $db = array(
+    private static $db = [
         'FeedbackOnPass' => 'HTMLText',
         'FeedbackOnFail' => 'HTMLText'
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'Content' => ''
-    );
+    ];
 
     private static $singular_name = 'Assessment';
 
     private static $plural_name = 'Assessments';
 
-    private static $submission_class = RhinoSubmittedAssessment::class;
-
     private static $table_name = 'RhinoAssessment';
+
+    private static $submission_class = RhinoSubmittedAssessment::class;
 
     public function getCMSFields()
     {
@@ -40,7 +41,7 @@ class RhinoAssessment extends UserDefinedForm
             $pass = HTMLEditorField::create('FeedbackOnPass');
             $fail = HTMLEditorField::create('FeedbackOnFail');
 
-            $fields->addFieldsToTab('Root.FeedbackOnSubmission', array($pass, $fail));
+            $fields->addFieldsToTab('Root.FeedbackOnSubmission', [$pass, $fail]);
 
             // Allow subclass to create defaults fields
             if (method_exists(get_class($this), 'createDefaultFields')) {
@@ -68,7 +69,7 @@ class RhinoAssessment extends UserDefinedForm
             $columns = singleton($this->stat('submission_class'))->summaryFields();
 
             // Still add the EditableFormField if required
-            foreach (EditableFormField::get()->filter(array("ParentID" => $this->ID)) as $eff) {
+            foreach (EditableFormField::get()->filter(["ParentID" => $this->ID]) as $eff) {
                 if ($eff->ShowInSummary) {
                     $columns[$eff->Name] = $eff->Title ?: $eff->Name;
                 }
@@ -110,7 +111,7 @@ class RhinoAssessment extends UserDefinedForm
     {
         $fields = $this->Fields();
         // remove EditableFormStep
-        $fields = $fields->exclude('ClassName', 'EditableFormStep');
+        $fields = $fields->exclude('ClassName', EditableFormStep::class);
 
         // return fields
         return $fields;

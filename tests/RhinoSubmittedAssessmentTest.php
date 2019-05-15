@@ -3,6 +3,8 @@
 /* Manual require because autoloading won't pick this up */
 require_once __DIR__ . '/../code/models/RhinoSubmittedAssessment.php';
 
+use SilverStripe\Dev\SapphireTest;
+
 class RhinoSubmittedAssessmentTest extends SapphireTest
 {
 	public function setUpOnce()

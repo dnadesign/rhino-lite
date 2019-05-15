@@ -19,4 +19,4 @@ SilverStripe\UserForms\Model\EditableFormField\EditableFormHeading:
   singular_name: Heading
 
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\ORM\ManyManyList: RhinoManyManyList
+  SilverStripe\ORM\ManyManyList: DNADesign\Rhino\ORM\RhinoManyManyList
