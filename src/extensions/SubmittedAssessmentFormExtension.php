@@ -2,6 +2,7 @@
 
 namespace DNADesign\Rhino\Extensions;
 
+use DNADesign\Rhino\Pagetypes\RhinoAssessment;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataExtension;
@@ -19,12 +20,29 @@ class SubmittedAssessmentFormExtension extends DataExtension
     }
 
     /**
+    * Figures out which is the parent page
+    * that generated this submission
+    *
+    * @return DataObject
+    */
+    public function getParentPage()
+    {
+        $parent_class = $this->owner->ParentClass;
+        $id = $this->owner->ParentID;
+        if ($id && $parent_class && class_exists($parent_class)) {
+            return $parent_class::get()->byID($id);
+        }
+
+        return null;
+    }
+
+    /**
      * Change class of SubmittedForm to be RhinoSubmittedAssessment if
      * Parent is a RhinoAssessment and not RhinoAssignment
      */
     public function updateAfterProcess($data = null, $form = null)
     {
-        $parent = $this->owner->Parent();
+        $parent = $this->owner->getParentPage();
 
         // Set a unique id if possible
         if ($this->owner->hasField('uid') && !$this->owner->uid) {
@@ -35,11 +53,7 @@ class SubmittedAssessmentFormExtension extends DataExtension
 
         // Transform SubmittedForm into RhinoSubmittedAssessment
         // for extra functionality
-        if (
-            (is_a($parent, 'RhinoAssessment') || is_subclass_of($parent, 'RhinoAssessment'))
-            &&
-            (!is_a($parent, 'RhinoAssignment') && !is_subclass_of($parent, 'RhinoAssignment'))
-        ) {
+        if ($parent instanceof \DNADesign\Rhino\Pagetypes\RhinoAssessment) {
             // Make SubmittedForm actual RhinoSubmittedAssessment
             $this->owner = $this->owner->newClassInstance($parent->stat('submission_class'));
             $this->owner->write();

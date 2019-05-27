@@ -24,15 +24,3 @@ SilverStripe\UserForms\Model\Submission\SubmittedForm:
 SilverStripe\UserForms\Model\Submission\SubmittedFormField:
   extensions:
     - DNADesign\Rhino\Extensions\RhinoSubmittedFormField
-
-#SilverStripe\UserForms\Model\EditableFormField\EditableOption:
-#  extensions:
-#    - DNADesign\Rhino\Extensions\BlockBetterButtonsExtension
-#
-#SilverStripe\UserForms\Model\EditableFormField:
-#  extensions:
-#    - DNADesign\Rhino\Extensions\BlockBetterButtonsExtension
-
-#SilverStripe\Core\Injector\Injector:
-#  GridFieldBetterButtonsItemRequest:
-#    class: GridFieldBetterButtonsItemRequest_SaveCallback

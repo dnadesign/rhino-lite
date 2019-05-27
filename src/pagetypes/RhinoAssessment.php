@@ -2,6 +2,7 @@
 
 namespace DNADesign\Rhino\Pagetypes;
 
+use DNADesign\Rhino\Control\RhinoAssessmentController;
 use DNADesign\Rhino\Model\RhinoSubmittedAssessment;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
@@ -30,6 +31,22 @@ class RhinoAssessment extends UserDefinedForm
     private static $table_name = 'RhinoAssessment';
 
     private static $submission_class = RhinoSubmittedAssessment::class;
+
+    private static $controller_class = RhinoAssessmentController::class;
+
+    /**
+    * UserDefinedForm overrides this method from SitreTree
+    * rather than using the config, so we need to override it again.
+    * To Do: Get UDF to use the config (need to fix the unit test)
+    */
+    public function getControllerName()
+    {
+        if ($this->config()->controller_class) {
+            return $this->config()->controller_class;
+        }
+
+        return parent::getControllerName();
+    }
 
     public function getCMSFields()
     {

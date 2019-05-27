@@ -13,16 +13,17 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\UserForms\Control\UserDefinedFormController;
+use SilverStripe\UserForms\Form\UserForm;
 use SilverStripe\UserForms\Model\Recipient\EmailRecipient;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
-use SilverStripe\UserForms\UserForm;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\ThemeResourceLoader;
 
 class RhinoAssessmentController extends UserDefinedFormController
 {
     private static $allow_multiple_reviews = true;
 
-    private static $submission_template = "ReceivedFormSubmission";
+    private static $submission_template = "SilverStripe\UserForms\Control\UserDefinedFormController_ReceivedFormSubmission";
 
     private static $finished_anchor = '';
 
@@ -31,34 +32,12 @@ class RhinoAssessmentController extends UserDefinedFormController
         'Form'
     ];
 
-    public function init()
-    {
-        Debug::show('bqbwbbbwbw');die;
-        parent::init();
-    }
-
-    /**
-     * Get the form for the page. Form can be modified by calling {@link updateForm()}
-     * on a UserDefinedForm extension.
-     *
-     * @return Forms
-     */
-    public function Form()
-    {
-        Debug::show('jqjqjqj');die;
-        $form = UserForm::create($this);
-        $this->generateConditionalJavascript();
-
-        return $form;
-    }
-
     /**
      * Retrieve the latest submission from its uid
      * @return SubmittedForm
      */
     public function getSubmission()
     {
-        Debug::show('jhgfds');die;
         $submission = $this->getRequest()->param('ID');
 
         if ($submission) {
@@ -74,7 +53,6 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function finished()
     {
-        Debug::show('4h5eb');die;
         $submission = $this->getSubmission();
 
         if (!$submission) {
@@ -128,11 +106,11 @@ class RhinoAssessmentController extends UserDefinedFormController
      */
     public function process($data, $form)
     {
-        Debug::show('jhgfds');die;
         $submittedForm = SubmittedForm::create();
 
         $submittedForm->SubmittedByID = ($member = Security::getCurrentUser()) ? $member->ID : 0;
         $submittedForm->ParentID = $this->ID;
+        $submittedForm->ParentClass = get_class($this->data());
 
         // if saving is not disabled save now to generate the ID
         if (!$this->DisableSaveSubmissions) {
@@ -290,8 +268,9 @@ class RhinoAssessmentController extends UserDefinedFormController
 
         $submittedForm->extend('updateAfterProcess', $data, $form);
 
-        Session::clear("FormInfo.{$form->FormName()}.errors");
-        Session::clear("FormInfo.{$form->FormName()}.data");
+        $session = $this->getRequest()->getSession();
+        $session->clear("FormInfo.{$form->FormName()}.errors");
+        $session->clear("FormInfo.{$form->FormName()}.data");
 
         $referrer = (isset($data['Referrer'])) ? '?referrer=' . urlencode($data['Referrer']) : "";
 
@@ -299,21 +278,21 @@ class RhinoAssessmentController extends UserDefinedFormController
         // the finished method directly.
         if (!$this->DisableAuthenicatedFinishAction) {
             if (isset($data['SecurityID'])) {
-                Session::set('FormProcessed', $data['SecurityID']);
+                $session->set('FormProcessed', $data['SecurityID']);
             } else {
                 // if the form has had tokens disabled we still need to set FormProcessed
                 // to allow us to get through the finshed method
                 if (!$this->Form()->getSecurityToken()->isEnabled()) {
                     $randNum = rand(1, 1000);
                     $randHash = md5($randNum);
-                    Session::set('FormProcessed', $randHash);
-                    Session::set('FormProcessedNum', $randNum);
+                    $session->set('FormProcessed', $randHash);
+                    $session->set('FormProcessedNum', $randNum);
                 }
             }
         }
 
         if (!$this->DisableSaveSubmissions) {
-            Session::set('userformssubmission' . $this->ID, $submittedForm->ID);
+            $session->set('userformssubmission'. $this->ID, $submittedForm->ID);
         }
 
         $action = 'finished';
