@@ -32,7 +32,7 @@ class RhinoAssessment extends UserDefinedForm
 
     private static $submission_class = RhinoSubmittedAssessment::class;
 
-    private static $controller_class = RhinoAssessmentController::class;
+    private static $controller_name = RhinoAssessmentController::class;
 
     /**
     * UserDefinedForm overrides this method from SitreTree
@@ -41,8 +41,8 @@ class RhinoAssessment extends UserDefinedForm
     */
     public function getControllerName()
     {
-        if ($this->config()->controller_class) {
-            return $this->config()->controller_class;
+        if ($this->config()->controller_name) {
+            return $this->config()->controller_name;
         }
 
         return parent::getControllerName();
@@ -70,10 +70,10 @@ class RhinoAssessment extends UserDefinedForm
 
             // Submissions must be RhinoSubmittedAssessments
             $gridField = $fields->fieldByName('Root.Submissions.Submissions');
+            $submission_class = $this->config()->submission_class;
+            $assessments = $submission_class::get();
 
-            $assessments = RhinoSubmittedAssessment::get();
-
-            if ($assessments->count() > 0) {
+            if ($assessments->count() > 0 && $this->Submissions()->Count() > 0) {
                 $list = $assessments->filter('ID', $this->Submissions()->column('ID'));
                 $gridField->setList($list);
             }
@@ -83,7 +83,7 @@ class RhinoAssessment extends UserDefinedForm
             $config = $gridField->getConfig();
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
 
-            $columns = singleton($this->stat('submission_class'))->summaryFields();
+            $columns = singleton($submission_class)->summaryFields();
 
             // Still add the EditableFormField if required
             foreach (EditableFormField::get()->filter(["ParentID" => $this->ID]) as $eff) {
