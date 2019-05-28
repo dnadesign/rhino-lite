@@ -174,7 +174,7 @@ class RhinoSubmittedAssessment extends SubmittedForm
     {
         $page = $this->Parent();
         if ($page && $page->exists()) {
-            $controller = singleton($page->ClassName . '_Controller');
+            $controller = singleton($page->getControllerName());
             if ($controller && $controller instanceof UserDefinedFormController) {
                 // TODO: Make sure the action is actually 'finished'
                 $link = Controller::join_links($page->AbsoluteLink(), 'finished', $this->uid);
