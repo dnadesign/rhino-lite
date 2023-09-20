@@ -1,20 +1,20 @@
 {
-    "name": "dnadesign/rhino-lite",
-    "license": "Copyright 2017 DNA Design",
-    "authors": [],
-    "type": "silverstripe-module",
-    "require": {
-        "silverstripe/framework": ">=3.2",
-        "silverstripe/cms": ">=3.2",
-        "silverstripe/userforms": "4.x",
-        "webbuilders-group/silverstripe-frontendgridfield": "1.0.x",
-        "undefinedoffset/sortablegridfield": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "hafriedlander/phockito": "^1.0"
-    },
-    "suggest": {
-        "dnadesign/rhino-fields": "Collection of markable fields for RhinoAssessment"
-    }
+  "name": "dnadesign/rhino-lite",
+  "license": "Copyright 2017 DNA Design",
+  "authors": [],
+  "type": "silverstripe-module",
+  "require": {
+    "silverstripe/framework": "^4 || ^5",
+    "silverstripe/cms": "^4 || ^5",
+    "silverstripe/userforms": "^6.0",
+    "webbuilders-group/silverstripe-frontendgridfield": "^2.0",
+    "undefinedoffset/sortablegridfield": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "hafriedlander/phockito": "^1.0"
+  },
+  "suggest": {
+    "dnadesign/rhino-fields": "Collection of markable fields for RhinoAssessment"
+  }
 }
