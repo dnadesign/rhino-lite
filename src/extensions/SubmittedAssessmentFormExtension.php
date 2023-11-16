@@ -55,7 +55,7 @@ class SubmittedAssessmentFormExtension extends DataExtension
         // for extra functionality
         if ($parent instanceof \DNADesign\Rhino\Pagetypes\RhinoAssessment) {
             // Make SubmittedForm actual RhinoSubmittedAssessment
-            $this->owner = $this->owner->newClassInstance($parent->stat('submission_class'));
+            $this->owner = $this->owner->newClassInstance($parent->config()->get('submission_class'));
             $this->owner->write();
 
             // Marking happens on RhinoSubmittedAssessment
