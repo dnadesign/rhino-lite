@@ -34,6 +34,7 @@ class RhinoAssessmentController extends UserDefinedFormController
 
     /**
      * Retrieve the latest submission from its uid
+     *
      * @return SubmittedForm
      */
     public function getSubmission()
@@ -88,10 +89,12 @@ class RhinoAssessmentController extends UserDefinedFormController
 
         $this->extend('updateReceivedFormSubmissionData', $data);
 
-        return $this->customise(array(
+        return $this->customise(
+            array(
             'Content' => $this->customise($data)->renderWith($this->config()->submission_template),
             'Form' => '',
-        ));
+            )
+        );
     }
 
     /**
@@ -100,7 +103,7 @@ class RhinoAssessmentController extends UserDefinedFormController
      * {@see UserForm::validate()} for validation step prior to processing
      *
      * @param array $data
-     * @param Form $form
+     * @param Form  $form
      *
      * @return Redirection
      */
@@ -181,7 +184,7 @@ class RhinoAssessmentController extends UserDefinedFormController
         }
 
         $emailData = [
-            "Sender" => Member::currentUser(),
+            "Sender" => Security::getCurrentUser(),
             "Fields" => $submittedFields
         ];
 

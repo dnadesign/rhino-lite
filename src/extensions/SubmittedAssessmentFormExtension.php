@@ -16,15 +16,15 @@ class SubmittedAssessmentFormExtension extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         $uid = ReadOnlyField::create('uid', 'uid');
-        $fields->insertAfter($uid, 'ParentID');
+        $fields->insertAfter('ParentID', $uid);
     }
 
     /**
-    * Figures out which is the parent page
-    * that generated this submission
-    *
-    * @return DataObject
-    */
+     * Figures out which is the parent page
+     * that generated this submission
+     *
+     * @return DataObject
+     */
     public function getParentPage()
     {
         $parent_class = $this->owner->ParentClass;

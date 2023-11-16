@@ -35,10 +35,10 @@ class RhinoAssessment extends UserDefinedForm
     private static $controller_name = RhinoAssessmentController::class;
 
     /**
-    * UserDefinedForm overrides this method from SitreTree
-    * rather than using the config, so we need to override it again.
-    * To Do: Get UDF to use the config (need to fix the unit test)
-    */
+     * UserDefinedForm overrides this method from SitreTree
+     * rather than using the config, so we need to override it again.
+     * To Do: Get UDF to use the config (need to fix the unit test)
+     */
     public function getControllerName()
     {
         if ($this->config()->controller_name) {
@@ -50,51 +50,53 @@ class RhinoAssessment extends UserDefinedForm
 
     public function getCMSFields()
     {
-        $this->beforeUpdateCMSFields(function (FieldList $fields) {
+        $this->beforeUpdateCMSFields(
+            function (FieldList $fields) {
 
-            $fields->removeByName('DisableSaveSubmissions');
+                $fields->removeByName('DisableSaveSubmissions');
 
-            // Feedback
-            $pass = HTMLEditorField::create('FeedbackOnPass');
-            $fail = HTMLEditorField::create('FeedbackOnFail');
+                // Feedback
+                $pass = HTMLEditorField::create('FeedbackOnPass');
+                $fail = HTMLEditorField::create('FeedbackOnFail');
 
-            $fields->addFieldsToTab('Root.FeedbackOnSubmission', [$pass, $fail]);
+                $fields->addFieldsToTab('Root.FeedbackOnSubmission', [$pass, $fail]);
 
-            // Allow subclass to create defaults fields
-            if (method_exists(get_class($this), 'createDefaultFields')) {
-                // Do nothing if the form already has fields set up
-                if ($this->getQuestions()->Count() == 0) {
-                    $this->createDefaultFields($this->Fields());
+                // Allow subclass to create defaults fields
+                if (method_exists(get_class($this), 'createDefaultFields')) {
+                    // Do nothing if the form already has fields set up
+                    if ($this->getQuestions()->Count() == 0) {
+                        $this->createDefaultFields($this->Fields());
+                    }
                 }
-            }
 
-            // Submissions must be RhinoSubmittedAssessments
-            $gridField = $fields->fieldByName('Root.Submissions.Submissions');
-            $submission_class = $this->config()->submission_class;
-            $assessments = $submission_class::get();
+                // Submissions must be RhinoSubmittedAssessments
+                $gridField = $fields->fieldByName('Root.Submissions.Submissions');
+                $submission_class = $this->config()->submission_class;
+                $assessments = $submission_class::get();
 
-            if ($assessments->count() > 0 && $this->Submissions()->Count() > 0) {
-                $list = $assessments->filter('ID', $this->Submissions()->column('ID'));
-                $gridField->setList($list);
-            }
-
-            // Summary Fields are hijacked by UserDefinedForm
-            // So need to explicitely use the RhinoSubmittedAssessment ones
-            $config = $gridField->getConfig();
-            $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
-
-            $columns = singleton($submission_class)->summaryFields();
-
-            // Still add the EditableFormField if required
-            foreach (EditableFormField::get()->filter(["ParentID" => $this->ID]) as $eff) {
-                if ($eff->ShowInSummary) {
-                    $columns[$eff->Name] = $eff->Title ?: $eff->Name;
+                if ($assessments->count() > 0 && $this->Submissions()->Count() > 0) {
+                    $list = $assessments->filter('ID', $this->Submissions()->column('ID'));
+                    $gridField->setList($list);
                 }
+
+                // Summary Fields are hijacked by UserDefinedForm
+                // So need to explicitely use the RhinoSubmittedAssessment ones
+                $config = $gridField->getConfig();
+                $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+
+                $columns = singleton($submission_class)->summaryFields();
+
+                // Still add the EditableFormField if required
+                foreach (EditableFormField::get()->filter(["ParentID" => $this->ID]) as $eff) {
+                    if ($eff->ShowInSummary) {
+                        $columns[$eff->Name] = $eff->Title ?: $eff->Name;
+                    }
+                }
+
+                $dataColumns->setDisplayFields($columns);
+
             }
-
-            $dataColumns->setDisplayFields($columns);
-
-        });
+        );
 
         $this->updateEditableFields();
 
@@ -109,12 +111,12 @@ class RhinoAssessment extends UserDefinedForm
             $fieldClasses = singleton(EditableFormField::class)->getEditableFieldClasses();
             foreach ($fieldClasses as $fieldClass => $fieldTitle) {
                 if (!in_array($fieldClass, $allowedFields)) {
-                    Config::inst()->update($fieldClass, 'hidden', true);
+                    Config::modify()->set($fieldClass, 'hidden', true);
                 }
             }
             // Explicitely allow fields, so subclasses show up
             foreach ($allowedFields as $fieldClass) {
-                Config::inst()->update($fieldClass, 'hidden', false);
+                Config::modify()->set($fieldClass, 'hidden', false);
             }
         }
     }
@@ -122,6 +124,7 @@ class RhinoAssessment extends UserDefinedForm
     /**
      * Return all fields (questions)
      * besides the EditableFormStep (required)
+     *
      * @return Int
      */
     public function getQuestions()
@@ -136,9 +139,11 @@ class RhinoAssessment extends UserDefinedForm
 
     public function getMarkableQuestions()
     {
-        $fields = $this->getQuestions()->filterByCallback(function ($field) {
-            return $field->hasMethod('pass_or_fail');
-        });
+        $fields = $this->getQuestions()->filterByCallback(
+            function ($field) {
+                return $field->hasMethod('pass_or_fail');
+            }
+        );
 
         return $fields;
     }
