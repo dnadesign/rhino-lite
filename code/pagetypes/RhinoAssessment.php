@@ -72,12 +72,12 @@ class RhinoAssessment extends UserDefinedForm {
 			$fieldClasses = singleton('EditableFormField')->getEditableFieldClasses();
 			foreach($fieldClasses as $fieldClass => $fieldTitle) {
 				if (!in_array($fieldClass, $allowedFields)) {
-					Config::inst()->update($fieldClass, 'hidden', true);
+					Config::inst()->merge($fieldClass, 'hidden', [true]);
 				}
 			}
 			// Explicitely allow fields, so subclasses show up
 			foreach($allowedFields as $fieldClass) {
-				Config::inst()->update($fieldClass, 'hidden', false);
+				Config::inst()->merge($fieldClass, 'hidden', [false]);
 			}
 		}
 	}
